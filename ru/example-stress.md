@@ -1,4 +1,6 @@
-﻿Проектик **stress**, может показать, как работает библиотека в тех или иных условиях. Адрес примера: https://github.com/newenclave/vtrc/tree/master/examples/stress
+﻿#Не закончено!
+
+Проектик **stress**, может показать, как работает библиотека в тех или иных условиях. Адрес примера: https://github.com/newenclave/vtrc/tree/master/examples/stress
 
 Как и во всех остальных примерах, код разделен на 3 части: 
 
