@@ -55,7 +55,7 @@
 
 И схема работы, когда *сторона B* отправляет **EVENT** из вызова *стороны А*
 
-<img src="https://raw.githubusercontent.com/newenclave/vtrc-docs/master/img/call-back.png" /> 
+<img src="https://raw.githubusercontent.com/newenclave/vtrc-docs/master/img/call-call-event.png" /> 
 
 
 Вышеозначенная схема работает тогда и только тогда, когда *сторона А* выполняет **CALL**, но не **EVENT**
