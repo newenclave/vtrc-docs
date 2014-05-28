@@ -18,6 +18,7 @@
     -t [ --tcp-nodelay ]       set TCP_NODELAY flag for tcp sockets
     -o [ --only-pool ]         use io pool for io operations and rpc calls
     -M [ --message-size ] arg  maximum message size for protocol
+    -B [ --read-size ] arg     buffer size for receiving data
     -S [ --stack-size ] arg    maximum recursion depth for both side
 
 тут: 
@@ -33,6 +34,8 @@
 * **only-pool** — параметр, который говорит серверу обрабатывать и системные события, и удаленные вызовы на одном и том же диспетчере, параметр **io-pool-size**, в этом случае задает количество потоков для этого диспетчера, параметр **rpc-pool-size** игнорируется. Запуск сервера с одним только ключом **--only-pool** запустит сервер только с 1 потоком (это будет главный поток функции main) и все все будет обрабатываться в нём.
 
 * **message-size** — задает максимальный размер сообщения с запросом, либо ответом. Превышение этого размера является грубым нарушение протокола и соединение незамедлительно закрывается. По-умолчанию это значение равно 65536 байт. Максимальное значение — 64 мегабайта.
+
+* **read-size** – размер буфера приема. Именно столько байт сможет за один прием вычитать сервер из канала клиента. 
 
 * **stack-size** — задает максимально допустимую глубину вызовов (см description.md)
 
@@ -143,5 +146,24 @@ Send ping with 44000 bytes as payload...ok; 1097 microseconds
 Send ping with 44000 bytes as payload...ok; 1225 microseconds
 Stopped
 ```
+
+То есть время, потраченное для отправки  44000 байт на сторону сервера, выполнение вызова на стороне сервера и прием ответа, получилось в районе 1 миллисекунды. 
+
+
+Если же мы зададим серверу маленький **read-size**, например равный 1 ```./stress_server -s 0.0.0.0:55555 --read-size=1```, то получим 
+
+```console
+Creating client ... Ok
+Connecting to 10.0.0.1:55555...connect...ready...Ok
+Start pinging...
+Send ping with 44000 bytes as payload...ok; 52349 microseconds
+Send ping with 44000 bytes as payload...ok; 53835 microseconds
+Send ping with 44000 bytes as payload...ok; 47642 microseconds
+Send ping with 44000 bytes as payload...ok; 59027 microseconds
+Send ping with 44000 bytes as payload...ok; 54667 microseconds
+Stopped
+```
+
+50-60 миллисекунд.
 
 
