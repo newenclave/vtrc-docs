@@ -72,7 +72,7 @@
         -p [ --ping ] arg          make ping [arg] time
         -c [ --gen-callbacks ] arg ask server for generate [arg] callbacks
         -e [ --gen-events ] arg    ask server for generate [arg] events
-        -R [ --recursive ] arg     ask server for generate [arg] events       
+        -R [ --recursive ] arg     make recursion calls
         -l [ --payload ] arg       payload in bytes for commands such as ping; 
                                    default = 64
 
@@ -81,5 +81,13 @@
 **server** – адрес сервера, имеет тот же формат, что адрес точки, используемой при запуске сервера (127.0.0.1:55555, ::1:55556, /home/sandbox/stress.sock, etc)
 
 **io-pool-size**,  **rpc-pool-size**, **tcp-nodelay** – отвечают за то же, что аналогичные опции серверной стороны. (todo: придумать пример, показывающий влияние tcp-nodelay для клиентской стороны...посылка множества событий на сторону сервера, например).
+
+Далее:
+
+##payload
+
+Общая настройка для остальных методов. Payload это симуляция полезной нагрузки для удаленных вызовов. По-умолчанию принимает значение 64 (уж не знаю почему =) ). В сообщения добавляет ```[arg]``` байт данных.
+
+##ping
 
 
