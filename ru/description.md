@@ -5,7 +5,9 @@
 Язык разработки: С++.
 
 Сторонние библиотеки: Boost (http://boost.org/); 
-                      Google Protocol Buffers (https://code.google.com/p/protobuf/) далее просто Protobuf
+                      Google Protocol Buffers (https://code.google.com/p/protobuf/) далее просто Protobuf;
+                      Используется реализация sha2 Аарона Д. Гиффорда (http://www.aarongifford.com/)
+
 
 ##Основные возможности:
 
