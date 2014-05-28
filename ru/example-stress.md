@@ -132,7 +132,7 @@ Stopped
 
 Увеличив  payload до, например, 44000 ```./stress_client -s 10.0.0.1:55555 -p 5 --payload=44000```, получим
 
-```
+```console
 Creating client ... Ok
 Connecting to 10.0.0.1:55555...connect...ready...Ok
 Start pinging...
