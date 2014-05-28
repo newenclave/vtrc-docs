@@ -90,14 +90,58 @@
 
 ##ping
 
+Принимает количество запросов, которые необходимо выполнить. Пауза между вызовами — 1 секунда.
 Для примера используется сообщение, описанное в файле протокола (stress.proto) 
 
 ```proto
+
 message ping_req {
     optional bytes payload = 1;
 }
-message ping_res { }
+message ping_res { } // пустой ответ.
 
 ```
 
-**ping_req** - сообщение-запрос. 
+а сам вызов описан в секции 
+
+```proto
+service stress_service { 
+    ....
+    rpc ping (ping_req) returns (ping_res);
+    ....
+}
+```
+
+**ping_req** - сообщение-запрос. В качестве payload имеет размер, указанный в опции payload командной строки.
+
+**ping_req** пустой и не несет никакой полезной нагрузки. Описан только для того, чтобы быть использованным в описании вызова.
+
+На машине с адресом 10.0.0.1 есть stress_server, слушающий порт 55555, тогда, выполнив ```./stress_client -s 10.0.0.1:55555 -p 5``` получим 
+
+```console
+Creating client ... Ok
+Connecting to 10.0.0.1:55555...connect...ready...Ok
+Start pinging...
+Send ping with 64 bytes as payload...ok; 292 microseconds
+Send ping with 64 bytes as payload...ok; 353 microseconds
+Send ping with 64 bytes as payload...ok; 494 microseconds
+Send ping with 64 bytes as payload...ok; 590 microseconds
+Send ping with 64 bytes as payload...ok; 619 microseconds
+Stopped
+```
+
+Увеличив  payload до, например, 44000 ```./stress_client -s 10.0.0.1:55555 -p 5 --payload=44000```, получим
+
+```console
+Creating client ... Ok
+Connecting to 10.0.0.1:55555...connect...ready...Ok
+Start pinging...
+Send ping with 44000 bytes as payload...ok; 837 microseconds
+Send ping with 44000 bytes as payload...ok; 1075 microseconds
+Send ping with 44000 bytes as payload...ok; 926 microseconds
+Send ping with 44000 bytes as payload...ok; 1097 microseconds
+Send ping with 44000 bytes as payload...ok; 1225 microseconds
+Stopped
+```
+
+
