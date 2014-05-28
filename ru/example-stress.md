@@ -8,7 +8,7 @@
  * protocol — описание протокола (общая часть, используемая и клиентом, и сервером)
  * server — серверная часть 
 
-Доступные опции сервероной части: **./stress_server --help**
+Доступные опции серверной части: **./stress_server --help**
 
     -? [ --help ]              help message
     -s [ --server ] arg        endpoint name; <tcp address>:<port> or <pipe/file 
@@ -55,4 +55,31 @@
     ./stress_server --server=0.0.0.0:55555 --server=:::55556 --server=/home/sandbox/stress.sock -i2 -r4
 
 Запустится сервер с теми же 3 точками, но для обработки системных событий будет использовано 2 потока, а для исполнения вызовов — 4. При в роли одного из потоков RPC диспетчера будет выступать поток функции main. Итого: основной поток + 5 дополнительных.
+
+
+
+##Client
+
+Доступные опции клиентской части
+
+    Allowed options:
+        -? [ --help ]              help message
+        -s [ --server ] arg        server name; <tcp address>:<port> or <pipe/file 
+                                   name>
+        -i [ --io-pool-size ] arg  threads for io operations; default = 1
+        -r [ --rpc-pool-size ] arg threads for rpc calls; default = 1
+        -t [ --tcp-nodelay ]       set TCP_NODELAY flag for tcp sockets
+        -p [ --ping ] arg          make ping [arg] time
+        -c [ --gen-callbacks ] arg ask server for generate [arg] callbacks
+        -e [ --gen-events ] arg    ask server for generate [arg] events
+        -R [ --recursive ] arg     ask server for generate [arg] events       
+        -l [ --payload ] arg       payload in bytes for commands such as ping; 
+                                   default = 64
+
+Тут: 
+
+**server** – адрес сервера, имеет тот же формат, что адрес точки, используемой при запуске сервера (127.0.0.1:55555, ::1:55556, /home/sandbox/stress.sock, etc)
+
+**io-pool-size**,  **rpc-pool-size**, **tcp-nodelay** – отвечают за то же, что аналогичные опции серверной стороны. (todo: придумать пример, показывающий влияние tcp-nodelay для клиентской стороны...посылка множества событий на сторону сервера, например).
+
 
