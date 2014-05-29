@@ -167,3 +167,18 @@ Stopped
 50-60 миллисекунд.
 
 
+
+Отложить 
+
+```bash
+#!/bin/bash
+
+n=0
+while [ $n -lt 2000 ];
+do
+    n=$[$n+1];
+    ./stress_client -s ::1:55555 -f 50 --payload=44000 &
+
+done
+```
+
