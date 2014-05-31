@@ -119,7 +119,7 @@ howto_example::request_message  req;
 howto_example::response_message res;
 req.set_hello( "%USERNAME%" );
 
-/// тут параметры не controller и done, (как и запрос, ответ) 
+/// тут параметры controller и done, (как и запрос, ответ) 
 /// могут быть NULL
 stub.send_hello( NULL, &req, &res, NULL ); 
 
@@ -128,7 +128,7 @@ std::cout <<  res.hello( ) << std::endl;
 
 результат клиента
 ```console
-Hello %USERNAME%  from hello_service_impl::send_hello!
+Hello %USERNAME% from hello_service_impl::send_hello!
 ```
 
 ##Server
