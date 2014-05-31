@@ -88,7 +88,7 @@ void hello_service::send_hello(::google::protobuf::RpcController* controller,
 
 
 ```cpp
-class hello_service : public ::google::protobuf::Service {
+class hello_service_Stub : public ::google::protobuf::Service {
 .........
     void send_hello(::google::protobuf::RpcController* controller,
                     const ::howto_example::request_message* request,
