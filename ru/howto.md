@@ -13,6 +13,28 @@
 
 Proto-файлов может быть несколько, в каждом может быть описан свой сервис и сообщения используемые этим сервисом. 
 
+```protobuf
+// пример proto-файла 
+
+package howto_example; // имя namespace для C++
+option cc_generic_services = true; // говорит протобуферу, что нужно сгенерировать сервис; без этого параметра будет сгенерирован исходник, описывающий только сообщения, но не service
+
+message request_messge { 
+    optional string hello = 1;
+}
+
+message response_messge { 
+    optional string hello = 1;
+}
+
+service hello_service {
+    rpc send_hello( request_messge ) returns ( response_messge );
+}
+
+```
+
+в этом файле я описал 2 сообщения ```request_messge``` и ```response_messge```
+
 
 ##Server
 
