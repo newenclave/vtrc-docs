@@ -131,6 +131,9 @@ std::cout <<  res.hello( ) << std::endl;
 Hello %USERNAME% from hello_service_impl::send_hello!
 ```
 
+Клиент и сервер могут находиться как одном хосте, так и на разных континентах. 
+
+
 ##Server
 
 ##Client
