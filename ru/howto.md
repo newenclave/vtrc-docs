@@ -134,12 +134,12 @@ class  hello_service_impl: public howto_example::hello_service {
 ```cpp
 howto_example::hello_service_Stub stub(channel); /// пользуем Stub-класс
 howto_example::request_message  req;             /// сообщение-запрос
-howto_example::response_message res;             /// Сообщение-результат
-req.set_hello( "%USERNAME%" );  /// установим значение поля hello
+howto_example::response_message res;             /// сообщение-результат
+req.set_hello( "%USERNAME%" );  /// установим значение поля hello в запросе
 
 /// тут параметры controller и done, (как и запрос, ответ) 
 /// могут быть NULL
-stub.send_hello( NULL, &req, &res, NULL );  /// вызов удаленного метода 
+stub.send_hello( NULL, &req, &res, NULL ); /// вызов удаленного метода 
 
 /// теперь в res.hello( ) у нас то, что написала туда другая сторона.
 std::cout <<  res.hello( ) << std::endl; 
