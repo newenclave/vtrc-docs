@@ -106,17 +106,25 @@ class hello_service_Stub : public ::google::protobuf::Service {
 Сторона реализующая сервис (не обязательно сервер!):
 ```cpp 
 
-class  hello_service_impl: public  howto_example::hello_service {
+/// наследуемся от howto_example::hello_service
+class  hello_service_impl: public howto_example::hello_service { 
     void send_hello(::google::protobuf::RpcController* controller,
                     const ::howto_example::request_message* request,
                     ::howto_example::response_message* response,
                     ::google::protobuf::Closure* done) override
     {
+        /// вход в обработчк.
+
         std::ostringstream oss;
-        oss << "Hello " << request->hello( ) 
+        /// возьмем строку из запроса
+        oss << "Hello " << request->hello( )  
             << " from hello_service_impl::send_hello!";
+        
+        /// поместим результат в ответ
         response->set_hello( oss.str( ) );
-        done->Run( ); /// Этот Run отошлет ответ. См ниже.
+        
+        /// done->Run( ) отошлет ответ!
+        done->Run( ); 
     }
 };
 
@@ -124,15 +132,16 @@ class  hello_service_impl: public  howto_example::hello_service {
 
 Сторона-клиент
 ```cpp
-howto_example::hello_service_Stub stub(channel);
-howto_example::request_message  req;
-howto_example::response_message res;
-req.set_hello( "%USERNAME%" );
+howto_example::hello_service_Stub stub(channel); /// пользуем Stub-класс
+howto_example::request_message  req;             /// сообщение-запрос
+howto_example::response_message res;             /// Сообщение-результат
+req.set_hello( "%USERNAME%" );  /// установим значение поля hello
 
 /// тут параметры controller и done, (как и запрос, ответ) 
 /// могут быть NULL
-stub.send_hello( NULL, &req, &res, NULL ); 
+stub.send_hello( NULL, &req, &res, NULL );  /// вызов удаленного метода 
 
+/// теперь в res.hello( ) у нас то, что написала туда другая сторона.
 std::cout <<  res.hello( ) << std::endl; 
 ```
 
