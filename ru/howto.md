@@ -115,10 +115,11 @@ class  hello_service_impl: public howto_example::hello_service {
                     const ::howto_example::request_message* request,
                     ::howto_example::response_message* response,
                     ::google::protobuf::Closure* done) override
-    {
-        /// вход в обработчк.
+    { 
+        /// вход в обработчик запроса
 
         std::ostringstream oss;
+
         /// возьмем строку из запроса
         oss << "Hello " << request->hello( )  
             << " from hello_service_impl::send_hello!";
