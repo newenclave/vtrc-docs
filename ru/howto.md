@@ -26,21 +26,21 @@ package howto_example; // имя namespace для C++
 /// описывающий только сообщения, но не service
 option cc_generic_services = true; 
 
-message request_messge { 
+message request_message { 
     optional string hello = 1;
 }
 
-message response_messge { 
+message response_message { 
     optional string hello = 1;
 }
 
 service hello_service {
-    rpc send_hello( request_messge ) returns ( response_messge );
+    rpc send_hello( request_message ) returns ( response_message );
 }
 
 ```
 
-в этом файле я описал 2 сообщения ```request_messge``` и ```response_messge```.Первое — сообщение-запрос, которое нужно будет заполнить клиенту перед тем, как отправить на сторону сервера. Второе – ответ и его заполнит уже сервер, когда выполнит вызов клиента и отправит ответ. 
+в этом файле я описал 2 сообщения ```request_message``` и ```response_message```.Первое — сообщение-запрос, которое нужно будет заполнить клиенту перед тем, как отправить на сторону сервера. Второе – ответ и его заполнит уже сервер, когда выполнит вызов клиента и отправит ответ. 
 
 После генерации мы получим 2 файла  howto.pb.h и howto.pb.cc (если наш файл называется howto.proto), которые должны будут включены в проект. Я использую cmake для генерирования и автоматического включения этих файлов в состав проекта, так мне не нужно думать о перегенерации файлов при изменении *.proto. 
 
@@ -50,8 +50,8 @@ service hello_service {
 class hello_service : public ::google::protobuf::Service {
 .........
     virtual void send_hello(::google::protobuf::RpcController* controller,
-                       const ::howto_example::request_messge* request,
-                       ::howto_example::response_messge* response,
+                       const ::howto_example::request_message* request,
+                       ::howto_example::response_message* response,
                        ::google::protobuf::Closure* done);
 .........
 };
@@ -64,8 +64,8 @@ class hello_service : public ::google::protobuf::Service {
 
 ```cpp
 void hello_service::send_hello(::google::protobuf::RpcController* controller,
-                       const ::howto_example::request_messge* request,
-                       ::howto_example::response_messge* response,
+                       const ::howto_example::request_message* request,
+                       ::howto_example::response_message* response,
                        ::google::protobuf::Closure* done) {
   controller->SetFailed("Method send_hello() not implemented.");
   done->Run();
@@ -81,8 +81,8 @@ void hello_service::send_hello(::google::protobuf::RpcController* controller,
 class hello_service : public ::google::protobuf::Service {
 .........
     void send_hello(::google::protobuf::RpcController* controller,
-                    const ::howto_example::request_messge* request,
-                    ::howto_example::response_messge* response,
+                    const ::howto_example::request_message* request,
+                    ::howto_example::response_message* response,
                     ::google::protobuf::Closure* done);
 .........
 };
@@ -92,6 +92,44 @@ class hello_service : public ::google::protobuf::Service {
 
 Итого: Сторона, которая хочет реализовать некий метод rpc, описанный в *.proto файлах, создает класс-наследник от класса-интерфейса и реализовывает нужные методы. 
 Сторона, которая хочет получить доступ к методам сервиса первой стороны, должна использовать Stub-класс и вызывать его методы.
+
+Сторона с сервисом:
+```cpp 
+
+class  hello_service_impl: public  howto_example::hello_service {
+    void send_hello(::google::protobuf::RpcController* controller,
+                    const ::howto_example::request_message* request,
+                    ::howto_example::response_message* response,
+                    ::google::protobuf::Closure* done) override
+    {
+        std::ostringstream oss;
+        oss << "Hello " << request->hello( ) 
+            << " from hello_service_impl::send_hello!";
+        response->set_hello( oss.str( ) );
+        done->Run( ); /// Этот Run отошлет ответ. См ниже.
+    }
+};
+
+```
+
+Сторона-клиент
+```cpp
+howto_example::hello_service_Stub stub(channel);
+howto_example::request_message  req;
+howto_example::response_message res;
+req.set_hello( "%USERNAME%" );
+
+/// тут параметры не controller и done, (как и запрос, ответ) 
+/// могут быть NULL
+stub.send_hello( NULL, &req, &res, NULL ); 
+
+std::cout <<  res.hello( ) << std::endl; 
+```
+
+результат клиента
+```console
+Hello %USERNAME%  from hello_service_impl::send_hello!
+```
 
 ##Server
 
