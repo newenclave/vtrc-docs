@@ -20,7 +20,7 @@ Proto-файлов может быть несколько, в каждом мо�
 ```protobuf
 // пример proto-файла; пусть это будет howto.proto
 
-package howto_example; // имя namespace для C++
+package howto; // имя namespace для C++
 
 /// cc_generic_services говорит протобуферу, 
 /// что нужно сгенерировать сервис; 
@@ -56,14 +56,14 @@ service hello_service {
 
 Если в протофайле задана опция  cc_generic_services (её можно так же задать в командной строке protoc), то помимо сообщений будут сгенерированы классы для работы с сервисами. По два на каждый.
 
-**Первый класс** (назовем его интерфейсом для сервиса) — класс для реализации обработчика запросов. Этот класс носит ровно то имя, которое было задано в proto-файле. То есть в нашем случае это будет класс  hello_service (howto_example ::hello_service, если с именем namespace). Этот класс содержит **виртуальные** методы, которые реализуют методы rpc, описанные сервисе. У нас будет один метод –  send_hello. В С++ он будет выглядеть так (howto.pb.h):
+**Первый класс** (назовем его интерфейсом для сервиса) — класс для реализации обработчика запросов. Этот класс носит ровно то имя, которое было задано в proto-файле. То есть в нашем случае это будет класс  hello_service (howto ::hello_service, если с именем namespace). Этот класс содержит **виртуальные** методы, которые реализуют методы rpc, описанные сервисе. У нас будет один метод –  send_hello. В С++ он будет выглядеть так (howto.pb.h):
 
 ```cpp
 class hello_service : public ::google::protobuf::Service {
 .........
     virtual void send_hello(::google::protobuf::RpcController* controller,
-                       const ::howto_example::request_message* request,
-                       ::howto_example::response_message* response,
+                       const ::howto::request_message* request,
+                       ::howto::response_message* response,
                        ::google::protobuf::Closure* done);
 .........
 };
@@ -76,8 +76,8 @@ class hello_service : public ::google::protobuf::Service {
 
 ```cpp
 void hello_service::send_hello(::google::protobuf::RpcController* controller,
-                       const ::howto_example::request_message* request,
-                       ::howto_example::response_message* response,
+                       const ::howto::request_message* request,
+                       ::howto::response_message* response,
                        ::google::protobuf::Closure* done) {
   controller->SetFailed("Method send_hello() not implemented.");
   done->Run();
@@ -93,8 +93,8 @@ void hello_service::send_hello(::google::protobuf::RpcController* controller,
 class hello_service_Stub : public ::google::protobuf::Service {
 .........
     void send_hello(::google::protobuf::RpcController* controller,
-                    const ::howto_example::request_message* request,
-                    ::howto_example::response_message* response,
+                    const ::howto::request_message* request,
+                    ::howto::response_message* response,
                     ::google::protobuf::Closure* done);
 .........
 };
@@ -111,11 +111,11 @@ class hello_service_Stub : public ::google::protobuf::Service {
 Сторона реализующая сервис (не обязательно сервер!):
 ```cpp 
 
-/// наследуемся от howto_example::hello_service
-class  hello_service_impl: public howto_example::hello_service { 
+/// наследуемся от howto::hello_service
+class  hello_service_impl: public howto::hello_service { 
     void send_hello(::google::protobuf::RpcController* controller,
-                    const ::howto_example::request_message* request,
-                    ::howto_example::response_message* response,
+                    const ::howto::request_message* request,
+                    ::howto::response_message* response,
                     ::google::protobuf::Closure* done) override
     { 
         /// вход в обработчик запроса
@@ -138,9 +138,9 @@ class  hello_service_impl: public howto_example::hello_service {
 
 Сторона-клиент
 ```cpp
-howto_example::hello_service_Stub stub(channel); /// пользуем Stub-класс
-howto_example::request_message  req;             /// сообщение-запрос
-howto_example::response_message res;             /// сообщение-результат
+howto::hello_service_Stub stub(channel); /// пользуем Stub-класс
+howto::request_message  req;             /// сообщение-запрос
+howto::response_message res;             /// сообщение-результат
 req.set_hello( "%USERNAME%" );  /// установим значение поля hello в запросе
 
 /// тут параметры controller и done, (как и запрос, ответ) 
