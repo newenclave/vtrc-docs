@@ -242,6 +242,19 @@ application_impl app(pp);
 Создаст 2 потока для обработки IO и 4 для вызовов rpc.
 
 
+```cpp
+/// один io_service 8 потоков обработки
+vtrc::common::pool_pair pp( 8 );
+
+/// application_impl — наследник от vtrc::server::application
+/// будет работать на одном io_service
+application_impl app(pp);
+
+```
+
+В этом случае будет 8 потоков, обрабатывающих один io_service.
+
+
 У vtrc::server::application есть 3 виртуальных метода.
 
 ```cpp
