@@ -324,10 +324,39 @@ public:
     
 }
 ```
+еще походий пример использования этого метода можно увидеть в примерах: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/server/lukki-db-application.cpp#L393
 
-Обертка common::rpc_service_wrapper сделана для большей гибкости. При помощи нее можно, например, отказывать клиенту в некоторых методах сервиса. 
 
-еще точно такой же пример использования этого метода можно увидеть в примерах: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/server/lukki-db-application.cpp#L393
+Обертка common::rpc_service_wrapper сделана для бóльшей гибкости. При помощи нее можно, например, отказывать клиенту в некоторых методах сервиса. 
+
+```cpp
+
+class my_rpc_wrapper: public rpc_service_wrapper
+{
+    common::connection_iface* connection_;
+public:
+    my_rpc_wrapper( google::protobuf::Service *my_serv, common::connection_iface* c )
+        :rpc_service_wrapper(my_serv)
+        , connection_(c)
+    { }
+
+    const google::protobuf::MethodDescriptor *get_method (
+                                                const std::string &name ) const
+    {
+        /// какой-то внешний вызов, 
+        /// который определит, что этому соединению можно исполнить метод 'name'
+        if( ::is_valid_method_for_connection( name, connection_ ) ) {
+            return find_method( name );
+        } else {
+            return NULL; /// клиенту отошлется ошибка о том, что метод недоступен
+        }
+    }
+
+};
+
+
+
+```
 
 
 Возможно в будущем этот метод будет заменен на что-то булее удобное.
