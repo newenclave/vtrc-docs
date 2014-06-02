@@ -337,7 +337,7 @@ class my_rpc_wrapper: public rpc_service_wrapper
 public:
     my_rpc_wrapper( google::protobuf::Service *my_serv, common::connection_iface* c )
         :rpc_service_wrapper(my_serv)
-        , connection_(c)
+        ,connection_(c)
     { }
 
     const google::protobuf::MethodDescriptor *get_method( const std::string &name ) const
