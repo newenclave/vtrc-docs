@@ -180,8 +180,42 @@ vtrc::common::pool_pair — пул с парой  io_service. Реализова
 
 ##Server
 
-Первое, что нужно для реализации серверной части — это класс-наследник от vtrc::server::application.
+Первое, что нужно для реализации серверной части — это класс-наследник от vtrc::server::application. 
 
+Application — это основной механизм общения библиотеки с приложением-сервром. Application хранит в себе список всех соединений. При помощи application библиотека получает экземпляры реализаций сервисов, настраивает соединения. 
+
+У vtrc::server::application есть 3 виртуальных метода.
+
+```cpp
+
+virtual std::string get_session_key( common::connection_iface* conn,
+                                     const std::string &id);
+
+virtual void configure_session( common::connection_iface* connection,
+                                vtrc_rpc::session_options &opts );
+virtual vtrc::shared_ptr<common::rpc_service_wrapper>
+                 get_service_by_name( common::connection_iface* connection,
+                                      const std::string &service_name );
+```
+
+**get_session_key** - запрашивается при использовании клиентом ключа для соединения. Библиотека поддерживает совсем простую базовую авторизацию клиентов. **get_session_key** может вернуть ключ для данного соединения (1ый параметр). Этот может быть общий ключ, либо уникальный для каждого клиента. На стороне клиента этот ключ так же должен быть известен. При несовпадении ключей, коммуникация будет невозможна. Второй параметр — это id клиента. Это может быть имя, номер, что угодно. 
+
+**configure_session** - вызывается после успешного соединения клиента. В качестве параметров передается интерфейс соединения (1ый параметр) и объект опций (2ой параметр).  vtrc_rpc::session_options — сообщение описанное в vtrc-rpc-lowlevel.proto.
+
+```proto
+message session_options {
+    optional uint32 max_active_calls    = 1 [default = 5];
+    optional uint32 max_message_length  = 2 [default = 65536];
+    optional uint32 max_total_calls     = 3 [default = 20];
+    optional uint32 max_stack_size      = 5 [default = 64];
+    optional uint32 read_buffer_size    = 6 [default = 4096];
+}
+```
+Эти опции можно поменять для конкретного соединения. После установки опций, клиент так же получит сведения о них. 
+
+**get_service_by_name** - основной метод для библиотеки. Благодаря этому методу серверная часть получает экземпляр класса, описанного сервиса. В качестве параметров передается интерфейс соединения, а так же имя нужного сервиса. В случае успеха вызов возвращает умный указатель на **common::rpc_service_wrapper** – обетку над google::protobuf::Service. Если запрашиваемый сервис недоступен для соединения, то  **get_service_by_name** может вернуть ```vtrc::shared_ptr<common::rpc_service_wrapper>( )```(пустой указатель), либо кинуть исключение. В первом случае клиент получит ошибку о недоступности данного сервиса, во втором случае клиент получит INTERNAL_ERROR с техстом из std::exception::what( );
+
+> стоит отметить, что библиотека обрабатывает исключения-наследники от std::exception и что-то другое будет проглочено и отправлено на другую сторону с текстом '...'.
 
 ##Client
 
