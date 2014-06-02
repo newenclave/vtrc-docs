@@ -223,8 +223,10 @@ Application — это основной механизм общения библ
 Обычно, common::pool_pair сам запускает обработку  io_service (метод run/run_one).
 
 ```cpp
-
+/// пара io_service и потоки для них
 vtrc::common::pool_pair pp(2, 4);
+
+/// application_impl — наследник от vtrc::server::application
 application_impl app(pp);
 
 ```
