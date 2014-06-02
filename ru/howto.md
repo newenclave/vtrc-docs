@@ -2,6 +2,14 @@
 
 #Не закончено
 
+Protocol: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#protocol
+
+Common: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#common
+
+Server: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#server
+
+Client: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#client
+
 Как построить клиент, сервер ... 
 
 Для начала нужно описание протокола, который будут понимать обе стороны (что очевидно).
