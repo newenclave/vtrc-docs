@@ -281,8 +281,8 @@ message session_options {
     optional uint32 max_active_calls    = 1 [default = 5];
     optional uint32 max_message_length  = 2 [default = 65536];
     optional uint32 max_total_calls     = 3 [default = 20];
-    optional uint32 max_stack_size      = 5 [default = 64];
-    optional uint32 read_buffer_size    = 6 [default = 4096];
+    optional uint32 max_stack_size      = 4 [default = 64];
+    optional uint32 read_buffer_size    = 5 [default = 4096];
 }
 ```
 Эти опции можно поменять для конкретного соединения. После установки опций, клиент так же получит сведения о них. 
