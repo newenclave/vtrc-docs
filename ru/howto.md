@@ -193,6 +193,7 @@ virtual std::string get_session_key( common::connection_iface* conn,
 
 virtual void configure_session( common::connection_iface* connection,
                                 vtrc_rpc::session_options &opts );
+
 virtual vtrc::shared_ptr<common::rpc_service_wrapper>
                  get_service_by_name( common::connection_iface* connection,
                                       const std::string &service_name );
@@ -213,9 +214,68 @@ message session_options {
 ```
 Эти опции можно поменять для конкретного соединения. После установки опций, клиент так же получит сведения о них. 
 
-**get_service_by_name** - основной метод для библиотеки. Благодаря этому методу серверная часть получает экземпляр класса, описанного сервиса. В качестве параметров передается интерфейс соединения, а так же имя нужного сервиса. В случае успеха вызов возвращает умный указатель на **common::rpc_service_wrapper** – обетку над google::protobuf::Service. Если запрашиваемый сервис недоступен для соединения, то  **get_service_by_name** может вернуть ```vtrc::shared_ptr<common::rpc_service_wrapper>( )```(пустой указатель), либо кинуть исключение. В первом случае клиент получит ошибку о недоступности данного сервиса, во втором случае клиент получит INTERNAL_ERROR с техстом из std::exception::what( );
+**get_service_by_name** - основной метод для библиотеки. Благодаря этому методу серверная часть получает экземпляр класса, описанного сервиса. В качестве параметров передается интерфейс соединения, а так же имя нужного сервиса. В случае успеха вызов возвращает умный указатель на **common::rpc_service_wrapper** – обёртку над google::protobuf::Service. Если запрашиваемый сервис недоступен для соединения, то  **get_service_by_name** может вернуть ```vtrc::shared_ptr<common::rpc_service_wrapper>( )```(пустой указатель), либо кинуть исключение. В первом случае клиент получит ошибку о недоступности данного сервиса, во втором случае клиент получит INTERNAL_ERROR с техстом из std::exception::what( );
 
 > стоит отметить, что библиотека обрабатывает исключения-наследники от std::exception и что-то другое будет проглочено и отправлено на другую сторону с текстом '...'.
+
+####Возвращаясь к hello_service_impl.
+
+Далее пример application для серверной части, реализующей сервис ```hello_service```, описанный в резделе **Protocol**. 
+
+
+```cpp
+
+/// наследуемся от howto::hello_service
+class  hello_service_impl: public howto::hello_service { 
+    void send_hello(::google::protobuf::RpcController* controller,
+                    const ::howto::request_message* request,
+                    ::howto::response_message* response,
+                    ::google::protobuf::Closure* done) override
+    { 
+        /// вход в обработчик запроса
+
+        std::ostringstream oss;
+
+        /// возьмем строку из запроса
+        oss << "Hello " << request->hello( )  
+            << " from hello_service_impl::send_hello!";
+
+        /// поместим результат в ответ
+        response->set_hello( oss.str( ) );
+
+        /// done->Run( ) отошлет ответ!
+        done->Run( ); 
+    }
+};
+............
+
+class hello_application: vtrc::server::application {
+public:
+    hello_application( vtrc::common::pool_pair &pp )
+        :vtrc::server::application(pp)
+    { }
+
+    vtrc::shared_ptr<common::rpc_service_wrapper>
+                 get_service_by_name( common::connection_iface* connection,
+                                      const std::string &service_name )
+    {
+        /// проверим, соответсвует ли имя запрашиваемого сервиса, нашему hello_serve
+        if( service_name == hello_service_impl::descriptor( )->full_name( ) ) {
+
+             /// создаем экземпляр
+             hello_service_impl *new_impl = new  hello_service_impl;
+
+             /// создаем и возвращем обертку
+             return vtrc::make_shared<common::rpc_service_wrapper>( new_impl );
+        }
+        /// вернем пустой указатель. Клиент получит ошибку о недоступности сервиса
+        return vtrc::shared_ptr<common::rpc_service_wrapper>( );
+    }
+    
+}
+```
+
+еще пример использования этого метода можно увидеть в примерах, например https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/server/lukki-db-application.cpp#L393
 
 ##Client
 
