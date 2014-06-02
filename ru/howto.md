@@ -340,15 +340,14 @@ public:
         , connection_(c)
     { }
 
-    const google::protobuf::MethodDescriptor *get_method (
-                                                const std::string &name ) const
+    const google::protobuf::MethodDescriptor *get_method( const std::string &name ) const
     {
         /// какой-то внешний вызов, 
         /// который определит, что этому соединению можно исполнить метод 'name'
         if( ::is_valid_method_for_connection( name, connection_ ) ) {
             return find_method( name );
         } else {
-            return NULL; /// клиенту отошлется ошибка о том, что метод недоступен
+            return NULL; /// клиенту отошлём ошибку о том, что метод недоступен
         }
     }
 
