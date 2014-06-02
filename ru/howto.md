@@ -255,6 +255,8 @@ application_impl app(pp);
 В этом случае будет 8 потоков, обрабатывающих один io_service.
 
 
+####Дальше
+
 У vtrc::server::application есть 3 виртуальных метода.
 
 ```cpp
