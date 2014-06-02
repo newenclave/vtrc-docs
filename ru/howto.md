@@ -345,7 +345,10 @@ public:
         /// какой-то внешний вызов, 
         /// который определит, что этому соединению можно исполнить метод 'name'
         if( ::is_valid_method_for_connection( name, connection_ ) ) {
+
+            /// protected метод; по имени найдет описатель (Descriptor) метода
             return find_method( name );
+
         } else {
             return NULL; /// клиенту отошлём ошибку о том, что метод недоступен
         }
