@@ -37,7 +37,7 @@ package howto; // имя namespace для C++
 option cc_generic_services = true; 
 
 message request_message { 
-    optional string hello = 1;
+    optional string name = 1;
 }
 
 message response_message { 
@@ -149,7 +149,7 @@ class  hello_service_impl: public howto::hello_service {
 howto::hello_service_Stub stub(channel); /// пользуем Stub-класс
 howto::request_message  req;             /// сообщение-запрос
 howto::response_message res;             /// сообщение-результат
-req.set_hello( "%USERNAME%" );  /// установим значение поля hello в запросе
+req.set_name( "%USERNAME%" );  /// установим значение поля name в запросе
 
 /// тут параметры controller и done, (как и запрос, ответ) 
 /// могут быть NULL
