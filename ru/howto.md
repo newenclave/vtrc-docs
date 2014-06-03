@@ -399,7 +399,65 @@ public:
 
 ####Слушатель (listener)
 
-Слушатель это сущность, которая открывает точку на стороне сервера и принимает соединения. Можно считать, что слушатель — это порт для доступа к сервисам. 
+Слушатель это сущность, которая открывает точку на стороне сервера и принимает соединения. Интерфейс слушателя описан в серерной части библиотеки в vtrc-listener.h 
+
+listener имеет очень простой интерфейс. Основные методы: **start**, **stop** и **name**. Названия методов говорят сами за себя. 
+
+**start** - запускает слушателя
+**stop** - останавливает
+**name** - возвращает имя. Имя зависит от типа слушателя. (например tcp://:::55555 для tcp6 точки с портом 55555).
+
+
+Для создания слушателя есть 2 функции. 
+
+Первая создает точку для tcp соединений (как для IPv4, так и для IPv6). В заголовке vtrc-server/vtrc-listener-tcp.h описано 2 функции-фабрики, которые создают указатель на экземпляр слушателя для TCP. 
+
+```cpp
+    namespace listeners { namespace tcp {
+
+        listener_sptr create( application &app,
+                              const std::string &address,
+                              unsigned short service,
+                              bool tcp_nodelay = false );
+
+        listener_sptr create( application &app,
+                              const vtrc_rpc::session_options &opts,
+                              const std::string &address,
+                              unsigned short service,
+                              bool tcp_nodelay = false );
+    }}
+```
+
+Первый принимаемый параметр — ссылка на экземпляр application (описан выше). Из него слушатель получает нужный io_service, а так же конфигурирует соединение.
+
+Первый вариант создает точку с настройками для точки по-умолчанию, второму варианту эти настройки можно передать явно. 
+
+Параметр *address* содержит локальный IP адрес для данной точки. Например: **127.0.0.1**, **0.0.0.0**. Или IPv6 **::1**, **::** …
+
+*service* — это порт, который следует открыть данной точке.
+
+Параметр  tcp_nodelay отключает действие *алгоритма Нейгла* для всех соединений данной точки. Влияние этого алгоритма можно увидеть в примере **stress**, входящий в состав библиотеки. Думаю не сильно ошибусь, если скажу, что в 95% случаев этот параметр может оставаться в *false*.
+
+```cpp
+    vtrc::shared_ptr<server::listener> local_net_tcp = server::listeners::tcp::create( app, "192.168.1.100", 32344);
+
+```
+
+
+
+Заголовок vtrc-server/vtrc-listener-local.h предоставляет функции для создания локальных слушателей. Для систем Windows это точки, которые открывают Named pipe для клиентов. В системах, поддерживающих POSIX — это Unix domain socket (POSIX Local IPC Sockets).
+
+```cpp
+    namespace listeners { namespace local {
+        listener_sptr create( application &app, const std::string &name );
+        listener_sptr create( application &app,
+                              const vtrc_rpc::session_options &opts,
+                              const std::string &name );
+    }}
+```
+
+Парарметр *name* содержить путь к POSIX сокету, либо имя пайпа (для windows).
+
 
 ##Client
 
