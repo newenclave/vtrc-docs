@@ -439,7 +439,8 @@ listener имеет очень простой интерфейс. Основны
 Параметр  tcp_nodelay отключает действие *алгоритма Нейгла* для всех соединений данной точки. Влияние этого алгоритма можно увидеть в примере **stress**, входящий в состав библиотеки. Думаю не сильно ошибусь, если скажу, что в 95% случаев этот параметр может оставаться в *false*.
 
 ```cpp
-    vtrc::shared_ptr<server::listener> local_net_tcp = server::listeners::tcp::create( app, "192.168.1.100", 32344);
+    vtrc::shared_ptr<server::listener> local_net_tcp = server::listeners::tcp::create( app, 
+                     "192.168.1.100", 32344);
 
 ```
 
