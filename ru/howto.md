@@ -367,17 +367,14 @@ public:
 
     const google::protobuf::MethodDescriptor *get_method( const std::string &name ) const
     {
+        /// protected метод; по имени найдет описатель (Descriptor) метода
         const google::protobuf::MethodDescriptor *result = find_method( name );
         /// какой-то внешний вызов, 
         /// который определит, что этому соединению можно исполнить метод 'name'
-        if( result && ::is_valid_method_for_connection( result, connection_ ) ) {
+        if( result && !::is_valid_method_for_connection( result, connection_ ) ) {
+            result = NULL; /// клиенту уйдет ошибка о том, что метод недоступен
 
-            /// protected метод; по имени найдет описатель (Descriptor) метода
-            return result
-
-        } else {
-            result = NULL; /// клиенту отошлём ошибку о том, что метод недоступен
-        }
+        } 
         return result;
     }
 
