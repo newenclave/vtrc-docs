@@ -460,6 +460,19 @@ listener имеет очень простой интерфейс. Основны
 Парарметр *name* содержить путь к POSIX сокету, либо имя пайпа (для windows).
 
 
+```cpp
+    vtrc::shared_ptr<server::listener> local_socket = server::listeners::local::create( app, "/home/sandbox/local.sock");
+
+```
+
+или для windows
+
+```cpp
+    vtrc::shared_ptr<server::listener> local_socket = server::listeners::local::create( app, "\\\\.\\pipe\\localpipe");
+
+```
+
+
 ##Client
 
 
