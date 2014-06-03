@@ -373,7 +373,6 @@ public:
         /// который определит, что этому соединению можно исполнить метод 'name'
         if( result && !::is_valid_method_for_connection( result, connection_ ) ) {
             result = NULL; /// клиенту уйдет ошибка о том, что метод недоступен
-
         } 
         return result;
     }
