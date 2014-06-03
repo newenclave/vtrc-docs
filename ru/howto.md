@@ -356,12 +356,12 @@ public:
 
 ```cpp
 
-class my_rpc_wrapper: public rpc_service_wrapper
+class my_rpc_wrapper: public common::rpc_service_wrapper
 {
     common::connection_iface* connection_;
 public:
     my_rpc_wrapper( google::protobuf::Service *my_serv, common::connection_iface* c )
-        :rpc_service_wrapper(my_serv)
+        :common::rpc_service_wrapper(my_serv)
         ,connection_(c)
     { }
 
@@ -387,6 +387,12 @@ public:
 };
 
 ```
+
+#####Итого: 
+
+Реализацию сервиса библиотека получает из метода  get_service_by_name от наследника vtrc::server::application. Получает в обертке common::rpc_service_wrapper. 
+Метод сервиса получается уже из обертки. Методом  get_method этой обертки. Защищенный метод  find_method находит по имени описатель метода сервиса.
+
 
 Теперь у нас практически все готово к тому, чтобы серверу начать свою работу. Итак ... 
 
