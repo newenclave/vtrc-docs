@@ -348,7 +348,7 @@ public:
     
 }
 ```
-еще походий пример использования этого метода можно увидеть в примерах: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/server/lukki-db-application.cpp#L393
+еще похожий пример использования этого метода можно увидеть в примерах: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/server/lukki-db-application.cpp#L393
 
 Возможно в будущем метод get_service_by_name  будет заменен на что-то более удобное.
 
