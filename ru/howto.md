@@ -20,7 +20,7 @@ Client: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#client
 
 Для описания протокола используются proto-файлы, из которых после, посредством Potobuf, генерируются исходники. (Если читатель не знаком с Protocol Buffers, то самое время ознакомиться тут https://code.google.com/p/protobuf/; Обычно хватает часа, а может и меньше, чтоб понять что это, зачем и как этим что-то описать и получить).
 
-Обычно я использую разделение проекта на 3 части. Client, Server и Protocol.
+В примерах (https://github.com/newenclave/vtrc/tree/master/examples) я использую разделение проекта на 3 части. Client, Server и Protocol.
 Часть "Protocol" используют и client, и server, так что это общая часть проекта. 
 
 Proto-файлов может быть несколько, в каждом может быть описан свой сервис и сообщения используемые этим сервисом. 
