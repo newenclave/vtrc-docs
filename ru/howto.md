@@ -131,7 +131,7 @@ class  hello_service_impl: public howto::hello_service {
         std::ostringstream oss;
 
         /// возьмем строку из запроса
-        oss << "Hello " << request->hello( )  
+        oss << "Hello " << request->name( )  
             << " from hello_service_impl::send_hello!";
         
         /// поместим результат в ответ
