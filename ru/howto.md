@@ -474,7 +474,6 @@ listener имеет очень простой интерфейс. Основны
 
 ```
 
-
 Теперь запрос на соединение будет получен, обработан.
 
 Кроме запуска и остановки слушатель имеет возможность сообщить внешнему миру о некоторых своих событиях. 
@@ -483,31 +482,28 @@ listener имеет очень простой интерфейс. Основны
 
 
 ```cpp
-        VTRC_DECLARE_SIGNAL( on_start, void ( ) );
+    VTRC_DECLARE_SIGNAL( on_start, void ( ) );
 ```
 Генерируется при успешном старте слушателя. 
 
 ```cpp
-        VTRC_DECLARE_SIGNAL( on_stop,  void ( ) );
+    VTRC_DECLARE_SIGNAL( on_stop,  void ( ) );
 ```
 Генерируется при остановке слушателя. 
 
 
 ```cpp
-        VTRC_DECLARE_SIGNAL( on_accept_failed,
-                             void ( const boost::system::error_code &err ) );
+    VTRC_DECLARE_SIGNAL( on_accept_failed, void ( const boost::system::error_code &err ) );
 ```
 Ошибка приема нового клиента. В ```err``` передается значение ошибки. В обработчике сигнала можно остановить слушатель, либо игнорировать. По ситуации.
 
 ```cpp
-        VTRC_DECLARE_SIGNAL( on_new_connection,
-                             void ( const common::connection_iface * ) );
+    VTRC_DECLARE_SIGNAL( on_new_connection, void ( const common::connection_iface * ) );
 ```
 Новое соединение. Сигнал генерируется только после успешного соединения клиента, умпешного обмена ключами, если таковые заданы. 
 
 ```cpp
-        VTRC_DECLARE_SIGNAL( on_stop_connection,
-                             void ( const common::connection_iface * ) );
+    VTRC_DECLARE_SIGNAL( on_stop_connection, void ( const common::connection_iface * ) );
 
 ```
 Закрытие соединения. Вызывается ПОСЛЕ закрытия соединения. Объект класса connection_iface еще живой, но уже не имеет соединения. 
