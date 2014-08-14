@@ -514,7 +514,7 @@ listener имеет очень простой интерфейс. Основны
 
 ###Пример Использования сигналов:
 
-Примеры можно увидеть, например, тут: https://github.com/newenclave/vtrc/blob/master/examples/calculator/server/main.cpp#L164
+Примеры можно увидеть, например, тут: https://github.com/newenclave/vtrc/blob/master/examples/calculator/server/main.cpp#L185
 
 В примере, при успешном создаении слушателя, application подписывается на его сигналы ```on_new_connection``` и ```on_stop_connection```. 
 
