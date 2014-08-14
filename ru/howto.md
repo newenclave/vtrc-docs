@@ -510,7 +510,14 @@ listener имеет очень простой интерфейс. Основны
                              void ( const common::connection_iface * ) );
 
 ```
-Закрытие соединения. Вызывается ПОСЛЕ закрытия соединения. Объект класса  connection_iface еще живой, но уже не имеет соединения. 
+Закрытие соединения. Вызывается ПОСЛЕ закрытия соединения. Объект класса connection_iface еще живой, но уже не имеет соединения. 
+
+###Пример Использования сигналов:
+
+Примеры можно увидеть, например, тут: https://github.com/newenclave/vtrc/blob/master/examples/calculator/server/main.cpp#L164
+
+В примере, при успешном создаении слушателя, application подписывается на его сигналы ```on_new_connection``` и ```on_stop_connection```. 
+
 
 ##Client
 
