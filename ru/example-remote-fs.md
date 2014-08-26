@@ -2,6 +2,7 @@
 
 ## REMOTE_FS
 
+README! https://github.com/newenclave/vtrc/blob/master/examples/remote-fs/README.md
 
 Пример использования библиотки для построения сервера для доступа к файловой системе хоста. 
 
