@@ -708,4 +708,34 @@ class lukki_db_Stub : public lukki_db {
     Кроме того на другой стороне есть возможность узнать, что ответ не ожидается.
     Это может помочь избежать ненужных вычислений, например.
 
-Для того, чтоб не писать каждый раз такую длинную лапшу для каждого вызова. 
+Для того, чтоб не писать каждый раз такую длинную лапшу для каждого вызова. Библиотека имеет обертку: https://github.com/newenclave/vtrc/blob/master/vtrc-common/vtrc-stub-wrapper.h
+
+Пример использования обертки можно увидеть в любом из примеров. Например тут: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/client/lukki-db-impl.cpp 
+
+Для нашего "Hello word!"'a это будет выглядеть примерно так: 
+
+```cpp
+    
+    /// создадим канал, и обернем его в  std::unique_ptr
+    std::unique_ptr<vtrc::common::rpc_channel> channel(client->create_channel( ));
+
+    /// создадим обертку Stub-класса для вызовов.
+    Vtrc::common::stub_wrapper<hello_service_Stub> hello(channel.get( ));
+    
+    /// создадим сообщения для запроса и для результата
+    howto::request_message  req;
+    howto::response_message res;
+    
+    /// Сервер ожидает, что в запросе будет установлено имя, 
+    /// которое он будет использовать для ответа. Установим
+    req.set_name( "%USERNAME%" );
+
+    /// сделаем вызов!
+    hello.call( &hello_service_Stub::send_hello, &req, &res );
+
+    /// если все прошло удачно, в  response мы будем иметь ответ.
+    std::cout <<  res.hello( ) << std::endl;
+
+```
+
+BTW обертка умеет хранить в себе и ```vtrc::shared_ptr```
