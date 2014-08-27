@@ -653,6 +653,7 @@ class lukki_db_Stub : public lukki_db {
     rpc_channel_c *create_channel( unsigned flags );
 ```
 Вызовы создают новый канал.
+    
     Тут "создают канал" не значит, что клиент будет куда-то опять соединяться.
 
     !!! Вызовы возвращают RAW-указатель и тот, кто создал канал сам должен его удалить.
@@ -661,7 +662,7 @@ class lukki_db_Stub : public lukki_db {
 Значения флагов: 
 
 ```cpp
- DEFAULT = 0               
+ DEFAULT = 0
 ```
 канал по-умолчанию. Вызовы будут регулироваться опциями, описанными в прото-файлах
 
@@ -674,3 +675,30 @@ class lukki_db_Stub : public lukki_db {
 ,USE_CONTEXT_CALL = 1 << 1
 ```
 Эта опция говорит о том, что любой вызов сделанный поверх такого канала будет пытаться найти контекст текущего вызова и отработать на другой стороне в контексте этого вызова. Эта опция создает канал, по которому можно будет делать CALLBACK'и.
+
+####И снова hello сервис. И пример использования на стороне клиента.
+
+```cpp
+    
+    /// создадим канал, и обернем его в  std::unique_ptr
+    std::unique_ptr<vtrc::common::rpc_channel> channel(client->create_channel( ));
+
+    /// создадим  Stub-класс для вызовов.
+    hello_service_Stub hello(channel.get( ));
+    
+    /// создадим сообщения для запроса и для результата
+    ::howto::request_message  request;
+    ::howto::response_message response;
+    
+    /// Сервер ожидает, что в запросе будет установлено имя, 
+    /// которое он будет использовать для ответа. Установим
+    request.set_name( "client name!" );
+
+    /// сделаем вызов!
+    hello.send_hello( NULL, &request, &response, NULL );
+
+    /// если все прошло удачно, в  response мы будем иметь ответ.
+    std::cout <<  response.hello( ) << std::endl;
+
+```
+
