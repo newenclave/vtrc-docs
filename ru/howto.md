@@ -534,7 +534,9 @@ listener имеет очень простой интерфейс. Основны
     client::vtrc_client_sptr client = client::vtrc_client::create( pp );
 ```
 
-Как и в случае слушателей сервеной стороны, у клиента есть свои сигналы. Всего таких сигналов пока 4 
+```create``` является статическим методом ```client::vtrc_client``` и сделан для того, чтоб создавать правильный указатель на клиента и инициализировать его (клиента). Создавать клиента на стеке, либо вызовом ```new client::vtrc_client(pp);``` нельзя
+
+Как и в случае слушателей серверной стороны, у клиента есть свои сигналы. Всего таких сигналов пока 4 
 
 ```cpp
     VTRC_DECLARE_SIGNAL( on_connect, void( ) );
@@ -594,7 +596,7 @@ namespace {
 Допустим по адресу 192.168.3.1:55550 есть некий сервер. Соединится с ним
 
 ```cpp
-    client->connect( "192.168.3.1", 55550);
+    client->connect( "192.168.3.1", 55550 );
 ```
 
 В случае успеха мы получим сигналы (по порядку) ```on_connect```, ```on_ready```. В случае недоступности хоста - получим exception.
@@ -602,26 +604,71 @@ namespace {
 Кроме вызова, который соединяется с сервером TCP
 
 ```cpp
-        void connect( const std::string &address,
-                      unsigned short service,
-                      bool tcp_nodelay = false );
+    void connect( const std::string &address,
+                  unsigned short service,
+                  bool tcp_nodelay = false );
 ```
 
 У клиента есть вызов, который соединяется с локальной точкой
 ```cpp
-        void connect( const std::string &local_name );
+    void connect( const std::string &local_name );
 ```
 Кроме того, есть асинхронные варианты вызовов:
 
 ```cpp
-        void async_connect( const std::string &local_name,
-                            common::system_closure_type closure);
+    void async_connect( const std::string &local_name,
+                        common::system_closure_type closure);
 
-        void async_connect( const std::string &address,
-                            unsigned short     service,
-                            common::system_closure_type closure,
-                            bool tcp_nodelay = false );
+    void async_connect( const std::string &address,
+                        unsigned short     service,
+                        common::system_closure_type closure,
+                        bool tcp_nodelay = false );
 ```
 
-Которые принимают, помимо обычных параметров, еще и функцию-замыкание, которая будет дернута по завершению соединения, а сам вызов вернет управление сразу.
+Которые принимают, помимо обычных параметров, еще и функцию-замыкание, которая будет дернута по завершению соединения, а сам вызов вернёт управление сразу.
 
+Теперь, когда мы успешно соединены, можно использовать то, что нам предоставил протобуфер, когда сгенерил исходники из *.proto файлов. 
+Как сообщалось ранее, для описаных сервисов генерируется 2 класса. Второй класс, который называется Stub нам и нужен для исполнения удаленного вызова. Stub-классы в качестве параметра в конструктор требуют вот такую вот сущность: 
+```::google::protobuf::RpcChannel* channel)```.
+
+Например, сгенерированный код Stub-класса из примера lukki-db https://github.com/newenclave/vtrc/tree/master/examples/lukki-db
+
+```cpp
+class lukki_db_Stub : public lukki_db {
+ public:
+  lukki_db_Stub(::google::protobuf::RpcChannel* channel);
+  lukki_db_Stub(::google::protobuf::RpcChannel* channel,
+                ::google::protobuf::Service::ChannelOwnership ownership);
+....
+}
+```
+Второй вызов может сказать Stub-классу, о том, что он сам владеет каналом и должен его сам удалить.
+
+Этот RpcChannel есть абстракция. И наследника от этого класса (реализацию канала) может вернуть клиент: 
+
+Два вызова 
+
+```cpp
+    rpc_channel_c *create_channel( );
+    rpc_channel_c *create_channel( unsigned flags );
+```
+Вызовы создают новый канал.
+    Тут "создают канал" не значит, что клиент будет куда-то опять соединяться.
+
+Второй вариант принимает некоторые флаги, которые будет отвечать за работу канала. Флаги описаны в часть "common" библиотеки в классе "rpc_channel" https://github.com/newenclave/vtrc/blob/master/vtrc-common/vtrc-rpc-channel.h#L26 
+Значения флагов: 
+
+```cpp
+ DEFAULT = 0               
+```
+канал по-умолчанию. Вызовы будут регулироваться опциями, описанными в прото-файлах
+
+```cpp
+,DISABLE_WAIT = 1
+```
+Создаст канал с отключенным ожиданием, даже если вызов рассчитан на то, чтоб вернуть каки-то данные, возвращать он их не будет. Любой вызов, сделанный поверх этого канала вернут управление сразу.
+
+```cpp
+,USE_CONTEXT_CALL = 1 << 1
+```
+Эта опция говорит о том, что любой вызов сделанный поверх такого канала будет пытаться найти контекст текущего вызова и отработать на другой стороне в контексте этого вызова. Эта опция создает канал, по которому можно будет делать CALLBACK'и.
