@@ -687,18 +687,23 @@ class lukki_db_Stub : public lukki_db {
     hello_service_Stub hello(channel.get( ));
     
     /// создадим сообщения для запроса и для результата
-    ::howto::request_message  request;
-    ::howto::response_message response;
+    howto::request_message  req;
+    howto::response_message res;
     
     /// Сервер ожидает, что в запросе будет установлено имя, 
     /// которое он будет использовать для ответа. Установим
-    request.set_name( "client name!" );
+    req.set_name( "%USERNAME%" );
 
     /// сделаем вызов!
-    hello.send_hello( NULL, &request, &response, NULL );
+    hello.send_hello( NULL, &req, &res, NULL );
 
     /// если все прошло удачно, в  response мы будем иметь ответ.
-    std::cout <<  response.hello( ) << std::endl;
+    std::cout <<  res.hello( ) << std::endl;
 
 ```
 
+    В случае vtrc параметры для вызовов (любой из четырех) не являются обязательными.
+    Если нет параметра-запроса, то будет отправлен вызов с пустым запросом
+    !!! Если нет параметра-отввета, то другая сторона **не будет даже сериализовать** сообщение с ответом. 
+
+Для того, чтоб не писать каждый раз такую длинную лапшу для каждого вызова. 
