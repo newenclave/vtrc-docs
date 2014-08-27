@@ -697,7 +697,7 @@ class lukki_db_Stub : public lukki_db {
     /// сделаем вызов!
     hello.send_hello( NULL, &req, &res, NULL );
 
-    /// если все прошло удачно, в  response мы будем иметь ответ.
+    /// если все прошло удачно, в  res мы будем иметь ответ.
     std::cout <<  res.hello( ) << std::endl;
 
 ```
