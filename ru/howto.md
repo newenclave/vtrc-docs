@@ -679,7 +679,7 @@ class lukki_db_Stub : public lukki_db {
 ####И снова hello сервис. И пример использования на стороне клиента.
 
 ```cpp
-    
+    /// Тут наш клиент уже успешно подключен.
     /// создадим канал, и обернем его в  std::unique_ptr
     std::unique_ptr<vtrc::common::rpc_channel> channel(client->create_channel( ));
 
@@ -715,7 +715,7 @@ class lukki_db_Stub : public lukki_db {
 Для нашего "Hello word!"'a это будет выглядеть примерно так: 
 
 ```cpp
-    
+        /// Тут наш клиент уже успешно подключен.
     /// создадим канал, и обернем его в  std::unique_ptr
     std::unique_ptr<vtrc::common::rpc_channel> channel(client->create_channel( ));
 
