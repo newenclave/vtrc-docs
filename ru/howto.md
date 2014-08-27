@@ -720,7 +720,7 @@ class lukki_db_Stub : public lukki_db {
     std::unique_ptr<vtrc::common::rpc_channel> channel(client->create_channel( ));
 
     /// создадим обертку Stub-класса для вызовов.
-    Vtrc::common::stub_wrapper<hello_service_Stub> hello(channel.get( ));
+    vtrc::common::stub_wrapper<hello_service_Stub> hello(channel.get( ));
     
     /// создадим сообщения для запроса и для результата
     howto::request_message  req;
