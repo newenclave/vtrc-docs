@@ -10,6 +10,8 @@ Server: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#server
 
 Client: https://github.com/newenclave/vtrc-docs/blob/master/ru/howto.md#client
 
+Hello sample: https://github.com/newenclave/vtrc/tree/master/examples/hello
+
 Как построить клиент, сервер ... 
 
 Для начала нужно описание протокола, который будут понимать обе стороны (что очевидно).
@@ -327,7 +329,7 @@ class  hello_service_impl: public howto::hello_service {
 };
 ............
 
-class hello_application: vtrc::server::application {
+class hello_application: public vtrc::server::application {
 public:
     hello_application( vtrc::common::pool_pair &pp )
         :vtrc::server::application(pp)
