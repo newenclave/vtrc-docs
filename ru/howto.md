@@ -658,7 +658,7 @@ class lukki_db_Stub : public lukki_db {
 
     !!! Вызовы возвращают RAW-указатель и тот, кто создал канал сам должен его удалить.
 
-Второй вариант принимает некоторые флаги, которые будет отвечать за работу канала. Флаги описаны в части "common" библиотеки в классе "rpc_channel" https://github.com/newenclave/vtrc/blob/master/vtrc-common/vtrc-rpc-channel.h#L26 
+Второй вариант принимает некоторые флаги, которые будет отвечать за работу канала. Флаги описаны в части "common" библиотеки в классе "rpc_channel" https://github.com/newenclave/vtrc/blob/master/include/vtrc-common/vtrc-rpc-channel.h#L26 
 Значения флагов: 
 
 ```cpp
@@ -708,7 +708,7 @@ class lukki_db_Stub : public lukki_db {
     Кроме того на другой стороне есть возможность узнать, что ответ не ожидается.
     Это может помочь избежать ненужных вычислений, например.
 
-Для того, чтоб не писать каждый раз такую длинную лапшу для каждого вызова. Библиотека имеет обертку: https://github.com/newenclave/vtrc/blob/master/vtrc-common/vtrc-stub-wrapper.h
+Для того, чтоб не писать каждый раз такую длинную лапшу для каждого вызова. Библиотека имеет обертку: https://github.com/newenclave/vtrc/blob/master/include/vtrc-common/vtrc-stub-wrapper.h
 
 Пример использования обертки можно увидеть в любом из примеров. Например тут: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/client/lukki-db-impl.cpp 
 
