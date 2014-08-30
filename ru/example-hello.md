@@ -3,8 +3,7 @@
 ## HELLO
 
 
-Пример использования библиотки для построения сервера для доступа к файловой системе хоста. 
-
+Простой пример использования библиотки.
 
 
 ##Protocol 
@@ -62,9 +61,9 @@ class  hello_service_impl: public howto::hello_service {
     /// обработчик вызова, описанного в ptoto-файле как 
     ///     rpc send_hello( request_message ) returns ( response_message );
     void send_hello(::google::protobuf::RpcController*  /*controller*/, // не нужен в данном примере
-                    const ::howto::request_message*     request,        // запрос
-                    ::howto::response_message*          response,       // сообщение, которое нужно заполнить для ответа
-                    ::google::protobuf::Closure*        done) /*override*/  // сигнал о готовности
+            const ::howto::request_message*     request,  // запрос
+            ::howto::response_message*          response, // сообщение с ответом
+            ::google::protobuf::Closure*        done) /*override*/  // сигнал об исполнении
     {
         common::closure_holder ch( done ); /// RAII. в деструкторе будет вызван done->Run( );
         
