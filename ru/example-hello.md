@@ -3,7 +3,7 @@
 ## HELLO
 
 
-Простой пример использования библиотки.
+Простой пример использования библиотечки.
 
 
 ##Protocol 
@@ -25,7 +25,7 @@ message response_message {         // сообщение - ответ
 }
 
 service hello_service {            // описание сервиса. 
-    // в серсие всего один вызов, который принимает сообщение request_message
+    // в сервисе всего один вызов, который принимает сообщение request_message
     // и результат помещает в сообщение response_message
     rpc send_hello( request_message ) returns ( response_message );
 }
@@ -42,23 +42,23 @@ service hello_service {            // описание сервиса.
 
 #include "vtrc-common/vtrc-connection-iface.h" // информация о соединении
 #include "vtrc-common/vtrc-closure-holder.h"   // RAII класс для замыкания в вызове 
-#include "vtrc-common/vtrc-thread-pool.h"      // кправление потоками и сервисом io_service
+#include "vtrc-common/vtrc-thread-pool.h"      // управление потоками и сервисом io_service
 
 #include "protocol/hello.pb.h"          // hello protocol. Сгенерированный файл из  hello.proto
 #include "google/protobuf/descriptor.h" // для descriptor( )->full_name( ) 
-#include "boost/lexical_cast.hpp"       // для примведения номера порта из комендной строки. 
+#include "boost/lexical_cast.hpp"       // для приведения номера порта из командной строки. 
 
 
 using namespace vtrc; /// чтоб не писать лишний раз
 
 ```
 
-Первое, что описано в файле исходнике сервера - это класс-сервис, начледний от сгенерированного howto::hello_service
+Первое, что описано в файле исходнике сервера - это класс-сервис, наследник от сгенерированного howto::hello_service
 
 ```cpp
 class  hello_service_impl: public howto::hello_service {
     
-    /// будем сохранять информацио о клиенте, владеющем этим классом
+    /// будем сохранять информацию о клиенте, владеющем этим классом
     common::connection_iface *cl_;
 
     /// обработчик вызова, описанного в ptoto-файле как 
@@ -103,7 +103,7 @@ public:
 
 #### Application
 
-Второй класс в исходние - основное приложение. Наследник от vtrc::server::application
+Второй класс в исходнике - основное приложение. Наследник от vtrc::server::application
 ```cpp
 class hello_application: public server::application {
     
@@ -121,7 +121,7 @@ public:
     
     /// Основной метод!
     /// принимает интерфейс клиента и имя запрашиваемого сервиса.
-    /// созвращает обертку, содержащую экземляр нашего сервиса (hello_service_impl)
+    /// возвращает обертку, содержащую экземпляр нашего сервиса (hello_service_impl)
     wrapper_sptr get_service_by_name( common::connection_iface* connection,
                                       const std::string &service_name )
     {
