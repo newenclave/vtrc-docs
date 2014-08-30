@@ -388,7 +388,7 @@ int main( int argc, const char **argv )
 
 клиент:
 
-    % ./hello_client 192.168.3.1 50000
+    % ./hello_client 192.168.3.1 50000
     Connecting...
     connect...ready...Ok
     Hello %USERNAME% from hello_service_impl::send_hello!
