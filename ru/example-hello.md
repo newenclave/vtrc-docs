@@ -316,7 +316,7 @@ int main( int argc, const char **argv )
 
         /// создаем экземпляр клиента 
         /// как и в случае со слушателями сервера мы пользуемся функцией-фабрикой,
-        /// которая вернет нам vtrc_client_sptr (shares_ptr<vtrc_client>)
+        /// которая вернет нам vtrc_client_sptr (shared_ptr<vtrc_client>)
         client::vtrc_client_sptr cl =
                          client::vtrc_client::create( tp.get_io_service( ) );
 
