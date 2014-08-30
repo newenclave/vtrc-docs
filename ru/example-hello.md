@@ -384,15 +384,15 @@ int main( int argc, const char **argv )
 
 сервер: 
 
-    % ./hello_server
+    [root@virt2real default]# ./hello_server 0.0.0.0 50000 
 
 клиент:
 
-    % ./hello_client 
+    % ./hello_client 192.168.3.1 50000 
     Connecting...
     connect...ready...Ok
     Hello %USERNAME% from hello_service_impl::send_hello!
-    Your transport name is 'tcp://127.0.0.1:53354'.
+    Your transport name is 'tcp://192.168.3.10:53354'.
     Have a nice day.
     
 
