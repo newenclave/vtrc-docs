@@ -380,8 +380,21 @@ int main( int argc, const char **argv )
 вот и весь клиент
 
 
+пробуем: 
 
+сервер: 
 
+    % ./hello_server
+
+клиент:
+
+    % ./hello_client 
+    Connecting...
+    connect...ready...Ok
+    Hello %USERNAME% from hello_service_impl::send_hello!
+    Your transport name is 'tcp://127.0.0.1:53354'.
+    Have a nice day.
+    
 
 
 
