@@ -58,7 +58,7 @@ using namespace vtrc; /// чтоб не писать лишний раз
 ```cpp
 class  hello_service_impl: public howto::hello_service {
     
-    /// будем сохранять информацию о клиенте, владеющем этим классом
+    /// будем сохранять информацию о клиенте, владеющим этим классом
     common::connection_iface *cl_;
 
     /// обработчик вызова, описанного в ptoto-файле как 
@@ -230,5 +230,170 @@ int main( int argc, const char **argv )
 С сервером примера всё.
 
 ##Client
+
+С клиентом всё немного проще. Клиент должен только соединиться и предоставить канал для Stub-классов сервисов. 
+
+####Заголовки: 
+
+```cpp
+
+#include "vtrc-client/vtrc-client.h"       /// client::vtrc_client сам клиент
+#include "vtrc-common/vtrc-thread-pool.h"  /// Управлятор потоками 
+#include "vtrc-common/vtrc-stub-wrapper.h" /// Обертка для использоания Stub-классов
+                                           ///  без обетки можно вполне обойтись
+
+#include "protocol/hello.pb.h"  /// сгенерированные классы для работы с протоколом
+ 
+#include "boost/lexical_cast.hpp" /// для приведения порта из строки в число в число
+
+using namespace vtrc; /// чтоб не писать постоянно
+
+```
+Далее объявлены функции, которые реагируют на события клиента.
+
+```cpp
+namespace {
+
+    /// соединён
+    void on_connect( )
+    {
+        std::cout << "connect...";
+    }
+    
+    /// готов
+    void on_ready( )
+    {
+        std::cout << "ready...";
+    }
+    
+    /// соединение закрыто
+    void on_disconnect( )
+    {
+        std::cout << "disconnect...";
+    }
+}
+
+```
+
+Опять же это не обязательный код, который можно удалить. 
+
+#### main
+
+В функции main: 
+
+    создается пул потоков, 
+    создается клиент, 
+    происходит подписка на сигналы клинета, 
+    клиент соединяется, 
+    при успешном соединении создается канал, делается удаленный вызов и выводится результат
+
+код: 
+
+```cpp
+
+int main( int argc, const char **argv )
+{
+    /// управлялка потоками. При старте создадим один поток, 
+    /// потому что работа клиента асинхронная, несмотря на то, что 
+    /// вызов connect не вернет управление до тех пор, пока клиент не станет готов
+    /// либо не произойдет ошибка, которая сгенерирует исключение.
+    common::thread_pool tp( 1 );
+
+    /// значения по умолчанию
+    const char *address = "127.0.0.1";
+    unsigned short port = 56560;
+
+    /// настроим так же как и в случае сервера
+    if( argc > 2 ) {
+        address = argv[1];
+        port = boost::lexical_cast<unsigned short>( argv[2] );
+    } else if( argc > 1 ) {
+        port = boost::lexical_cast<unsigned short>( argv[1] );
+    }
+
+    /// попробуем .... 
+    try {
+
+        /// создаем экземпляр клиента 
+        /// как и в случае со слушателями сервера мы пользуемся функцией-фабрикой,
+        /// которая вернет там vtrc_client_sptr (shares_ptr<vtrc_client>)
+        client::vtrc_client_sptr cl =
+                         client::vtrc_client::create( tp.get_io_service( ) );
+
+        /// подпишемя на сигналы
+        cl->on_connect_connect( on_connect );
+        cl->on_ready_connect( on_ready );
+        cl->on_disconnect_connect( on_disconnect );
+
+        std::cout <<  "Connecting..." << std::endl;
+
+        /// попытемя соединиться
+        /// в случае успеха на консоль будет выведено 
+        /// Connecting...connect...ready...Ok
+        cl->connect( address, port );
+        std::cout << "Ok" << std::endl;
+
+        /// Создадим канал, который потом отдадим Stub-классу
+        vtrc::unique_ptr<common::rpc_channel> channel(cl->create_channel( ));
+
+        /// просто удобный typedef
+        typedef howto::hello_service_Stub stub_type;
+
+        /// обертка для вызовов, которая создаст класс
+        common::stub_wrapper<stub_type> hello(channel.get( ));
+
+        /// сообщения запроса и ответа
+        howto::request_message  req;
+        howto::response_message res;
+
+        /// методы с префиксом set_, либо mutable_ создаются генератором-протофуфером
+        /// для установки значений 
+        req.set_name( "%USERNAME%" );
+
+        /// делаем удаленный вызов. 
+        /// если бы hello был экземпляром Stub-класса, 
+        /// то вызов выглядел бы так: 
+        ///     stub_type hello(channel.get( ));
+        ///     ......
+        ///     hello.send_helo( NULL, &req, &res, NULL );
+        hello.call( &stub_type::send_hello, &req, &res );
+
+        /// вывод результата, который отдал сервер
+        std::cout <<  res.hello( ) << std::endl;
+
+    } catch( const std::exception &ex ) {
+        std::cerr << "Hello, world failed: " << ex.what( ) << "\n";
+    }
+
+    /// остановим потоки и подождем пока они не прекратят работу
+    tp.stop( );
+    tp.join_all( );
+
+    /// make valgrind happy.
+    google::protobuf::ShutdownProtobufLibrary( );
+
+    return 0;
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
