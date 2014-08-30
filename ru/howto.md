@@ -564,7 +564,7 @@ listener имеет очень простой интерфейс. Основны
 Клиент/сервер разорвали соединение.
 
 
-Пример: https://github.com/newenclave/vtrc/blob/master/examples/lukki-db/client/client.cpp#L178
+Пример: https://github.com/newenclave/vtrc/blob/master/examples/hello/client/main.cpp#L47
 
 ```cpp
 
