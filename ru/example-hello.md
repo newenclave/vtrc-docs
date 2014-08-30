@@ -185,6 +185,8 @@ int main( int argc, const char **argv )
     try {
         
         /// cоздаем слушателя, передаем ему ссылку на наше приложение
+        /// create возвращает shared_ptr<server::listener> !!!
+        /// то есть сделать указатель уникальным нельзя
         vtrc::shared_ptr<server::listener>
                 tcp( server::listeners::tcp::create( app, address, port ) );
         
@@ -197,6 +199,10 @@ int main( int argc, const char **argv )
         /// НО! 
         /// В системах Windows будет второй поток, который управляет таймерами
         tp.attach( );
+
+        
+        /// Кстати.
+        /// При выходе из области видиммости слушатель будет остановлен и уничтожен
 
     } catch( const std::exception &ex ) {
         /// что-то неполучилось. Скажем в консоль об этом
