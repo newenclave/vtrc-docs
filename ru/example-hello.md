@@ -379,38 +379,6 @@ int main( int argc, const char **argv )
 ```
 вот и весь клиент
 
-#### Интерфейсы
-
-Для того, чтоб каждый раз не создавать экземпляры классов запросов и ответов, можно создавать интерфейсы, которые будут скрывать в себе всю работу со стабами.
-
-Пример можно посмотреть, например, тут: 
-
-Объявление: https://github.com/newenclave/vtrc/blob/master/examples/remote-fs/client/rfs-iface.h
-
-Реализация: https://github.com/newenclave/vtrc/blob/master/examples/remote-fs/client/rfs-impl.cpp
-
-Далее в программе используются обычные с++ методы, с обычными типами, вместо сообщений. 
-
-Например: листинг удаленной директории: 
-
-```cpp
-
-    typedef vtrc::shared_ptr<interfaces::remote_fs_iterator> iterator;
-
-    std::string lstring( 2, ' ' ); 
-
-    for( iterator i(impl.begin_iterator( )); !i->end( ); i->next( ) ) {
-
-        bool is_dir( i->info( ).is_directory_ );
-
-        std::cout << lstring
-                      << ( i->info( ).is_empty_ ? " " : "+" )
-                      << ( is_dir ? "[" : " " )
-                      << leaf_of(i->info( ).path_)
-                      << ( is_dir ? "]" : " " )
-                      << "\n";
-    }
-```
 
 
 
