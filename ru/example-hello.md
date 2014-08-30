@@ -347,7 +347,7 @@ int main( int argc, const char **argv )
         howto::request_message  req;
         howto::response_message res;
 
-        /// методы с префиксом set_, либо mutable_ создаются генератором-протофуфером
+        /// методы с префиксом set_, либо mutable_ создаются генератором-протобуфером
         /// для установки значений 
         req.set_name( "%USERNAME%" );
 
