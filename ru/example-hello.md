@@ -316,21 +316,22 @@ int main( int argc, const char **argv )
 
         /// создаем экземпляр клиента 
         /// как и в случае со слушателями сервера мы пользуемся функцией-фабрикой,
-        /// которая вернет там vtrc_client_sptr (shares_ptr<vtrc_client>)
+        /// которая вернет нам vtrc_client_sptr (shares_ptr<vtrc_client>)
         client::vtrc_client_sptr cl =
                          client::vtrc_client::create( tp.get_io_service( ) );
 
-        /// подпишемя на сигналы
+        /// подпишемся на сигналы
         cl->on_connect_connect( on_connect );
         cl->on_ready_connect( on_ready );
         cl->on_disconnect_connect( on_disconnect );
 
         std::cout <<  "Connecting..." << std::endl;
 
-        /// попытемя соединиться
+        /// попытаемся соединиться
         /// в случае успеха на консоль будет выведено 
         /// Connecting...connect...ready...Ok
         cl->connect( address, port );
+
         std::cout << "Ok" << std::endl;
 
         /// Создадим канал, который потом отдадим Stub-классу
