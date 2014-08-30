@@ -48,6 +48,9 @@ service hello_service {            // описание сервиса.
 #include "google/protobuf/descriptor.h" // для descriptor( )->full_name( ) 
 #include "boost/lexical_cast.hpp"       // для примведения номера порта из комендной строки. 
 
+
+using namespace vtrc; /// чтоб не писать лишний раз
+
 ```
 
 Первое, что описано в файле исходнике сервера - это класс-сервис, начледний от сгенерированного howto::hello_service
@@ -98,7 +101,48 @@ public:
 };
 ```
 
+#### Application
 
+Второй класс в исходние - основное приложение. Наследник от vtrc::server::application
+```cpp
+class hello_application: public server::application {
+    
+    /// удобный typedef.
+    typedef common::rpc_service_wrapper     wrapper_type;
+    typedef vtrc::shared_ptr<wrapper_type>  wrapper_sptr;
+
+public:
+
+    /// принимает класс common::thread_pool и берет из него ссылку на io_service
+    ///         который необходим для работы приложения.
+    hello_application( common::thread_pool &tp )
+        :server::application(tp.get_io_service( ))
+    { }
+    
+    /// Основной метод!
+    /// принимает интерфейс клиента и имя запрашиваемого сервиса.
+    /// созвращает обертку, содержащую экземляр нашего сервиса (hello_service_impl)
+    wrapper_sptr get_service_by_name( common::connection_iface* connection,
+                                      const std::string &service_name )
+    {
+        /// проверим действительно ли клиент запросил наш сервис
+        /// и если да, то создадим экземпляр hello_service_impl и обертку для него
+        if( service_name == hello_service_impl::service_name( ) ) {
+             
+             /// сервис 
+             hello_service_impl *new_impl = new hello_service_impl(connection);
+            
+             /// вернем обертку.
+             return vtrc::make_shared<wrapper_type>( new_impl );
+
+        }
+        /// клиент запросил что-то не то. вернем пустой указатель, 
+        /// который обозначит отсутствие сервиса и отправит клиенту ошибку
+        return wrapper_sptr( );
+    }
+
+};
+```
 
 ##Client
 
