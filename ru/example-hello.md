@@ -244,7 +244,7 @@ int main( int argc, const char **argv )
 
 #include "protocol/hello.pb.h"  /// сгенерированные классы для работы с протоколом
  
-#include "boost/lexical_cast.hpp" /// для приведения порта из строки в число в число
+#include "boost/lexical_cast.hpp" /// для приведения порта из строки в число
 
 using namespace vtrc; /// чтоб не писать постоянно
 
