@@ -61,7 +61,7 @@ class  hello_service_impl: public howto::hello_service {
     /// будем сохранять информацию о клиенте, владеющим этим классом
     common::connection_iface *cl_;
 
-    /// обработчик вызова, описанного в ptoto-файле как 
+    /// обработчик вызова, описанного в proto-файле как 
     ///     rpc send_hello( request_message ) returns ( response_message );
     void send_hello(::google::protobuf::RpcController*  /*controller*/, // не нужен в данном примере
             const ::howto::request_message*     request,  // запрос
