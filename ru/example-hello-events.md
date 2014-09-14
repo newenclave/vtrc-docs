@@ -239,3 +239,4 @@ Callback from server; Current thread is: 0x7f89591ac780
 Client string: Hello there! my thread id is 0x7f89591ac780
 ```
 
+Как видно из вывода событие бвло вызвано в потоке с id `0x7f8957492700`, а вызов колбека был сделан в потоке с id `0x7f89591ac780`, который является потоком функции `main`.
