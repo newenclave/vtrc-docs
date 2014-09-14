@@ -8,7 +8,7 @@
 
 ##Protocol 
 
-Протокол декларирован в proto-файле (https://github.com/newenclave/vtrc/blob/master/examples/hello-events/protocol/hello.proto). 
+Протокол декларирован в proto-файле (https://github.com/newenclave/vtrc/blob/master/examples/hello-events/protocol/hello-events.proto). 
 
 ```protobuf
 
