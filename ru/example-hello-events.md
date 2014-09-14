@@ -150,4 +150,68 @@ class hello_event_impl: public howto::hello_events {
     cl->assign_rpc_handler( vtrc::make_shared<hello_event_impl>( ) );
 ```
 
+Клиент, при старте, выводит id потока функции `main( )`
+
+```cpp
+    std::cout << "main( ) thread id is: 0x"
+              << std::hex
+              << vtrc::this_thread::get_id( )
+              << std::dec
+              << "\n";
+```
+После этого делается вызов `generate_events` 
+
+```cpp
+        hello.call( &stub_type::generate_events );
+```
+
+В этом вызове сервер делает вызов события и колбека. Обработка этих вызовов описана в `hello_event_impl`.
+
+Обработка event 
+
+```cpp
+    void hello_event(::google::protobuf::RpcController* /*controller*/,
+                 const ::howto::event_req*              /*request*/,
+                 ::howto::event_res*                    /*response*/,
+                 ::google::protobuf::Closure* done)
+    {
+        common::closure_holder ch( done );
+        std::cout << "Event from server; Current thread is: 0x"
+                  << std::hex
+                  << vtrc::this_thread::get_id( )
+                  << std::dec
+                  << "\n"
+                     ;
+    }
+
+```
+Просто выводит id текущего потока. Так как это событие, которое исполняется вне контекста `generate_events`, id будет отличатсья от id потока `main( )`.
+
+Второй обработчик опять же выводит подобную строку, и устанавливает строку для сервера, которую сервер потом выведет на консоль.
+
+```cpp
+
+    void hello_callback(::google::protobuf::RpcController* /*controller*/,
+                 const ::howto::event_req*                 /*request*/,
+                 ::howto::event_res* response,
+                 ::google::protobuf::Closure* done)
+    {
+        common::closure_holder ch( done );
+        std::cout << "Callback from server; Current thread is: 0x"
+                  << std::hex
+                  << vtrc::this_thread::get_id( )
+                  << std::dec
+                  << "\n"
+                     ;
+        std::ostringstream oss;
+        oss << "Hello there! my thread id is 0x"
+            << std::hex
+            << vtrc::this_thread::get_id( )
+               ;
+        response->set_hello_from_client( oss.str( ) );
+    }
+
+```
+Тут на консоль уже будет выведет тот самый id, который был показан при старте клиента из функции `main( )`. 
+
 
