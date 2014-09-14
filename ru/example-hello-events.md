@@ -135,7 +135,7 @@ using   server::channels::unicast::create_event_channel;
 Как и в случае сервера вместо `thread_pool` будет использоваться `pool_pair`.
 
 
-Кроме того для клиента теперь нужно создать класс-наследник от класса `howto::hello_events` и устанавливать его в качестве обработчика.
+Кроме того, для клиента теперь нужно создать класс-наследник от класса `howto::hello_events` и устанавливать его в качестве обработчика.
 
 ```cpp
 class hello_event_impl: public howto::hello_events {
@@ -144,7 +144,7 @@ class hello_event_impl: public howto::hello_events {
 
 ```
 
-Истановим обработчик для вызовов со стороны сервера 
+Установим обработчик для вызовов со стороны сервера 
 
 ```cpp
     cl->assign_rpc_handler( vtrc::make_shared<hello_event_impl>( ) );
