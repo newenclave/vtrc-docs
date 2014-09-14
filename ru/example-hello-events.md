@@ -96,8 +96,22 @@ using   server::channels::unicast::create_event_channel;
     По-умолчанию установлен в true. При значении false, 
     вызовы сделанные через такой канал будут ждать результата с другой стороны.
 
-Далее делается вызов-колбек. С колбеком происходит все немного по другому. Во-первых по-умолчанию колбека выполняются с ожиданием результата (`disable_wait` установлен в `false`), во-вторых колбек выполняется на другой стороне в потоке того самого вызова, из которого этот колбек сделан. В этом случае это поток из которого клиент делает `generate_events`. 
+Далее делается вызов-колбек. С колбеком происходит все немного по другому. Во-первых по-умолчанию колбек выполняется с ожиданием результата (`disable_wait` установлен в `false`), во-вторых колбек выполняется на другой стороне в потоке того самого вызова, из которого этот колбек сделан. В этом случае это поток из которого клиент делает `generate_events`. 
 
+```cpp
+{ // do callback. wait response from client.
+    common::rpc_channel *cc =
+        create_callback_channel( cl_->shared_from_this( ) );
+    common::stub_wrapper<stub_type> callback( cc );
+    howto::event_res response;
+    callback.call_response( &stub_type::hello_callback, &response );
+    std::cout << "Client string: "
+        << response.hello_from_client( )
+        << "\n"
+        ;
+}
+
+```
 
 ##Client
 
