@@ -78,14 +78,14 @@ service hello_events {
 ####Канал первый, вызов события.
 
 ```cpp
-	using   server::channels::unicast::create_callback_channel;
-      using   server::channels::unicast::create_event_channel;
-      { // do event. send and dont wait response
-          common::rpc_channel *ec =
-                            create_event_channel( cl_->shared_from_this( ) );
-          common::stub_wrapper<stub_type> event( ec );
-          event.call( &stub_type::hello_event );
-      }
+using   server::channels::unicast::create_callback_channel;
+using   server::channels::unicast::create_event_channel;
+{ // do event. send and dont wait response
+    common::rpc_channel *ec =
+            create_event_channel( cl_->shared_from_this( ) );
+    common::stub_wrapper<stub_type> event( ec );
+    event.call( &stub_type::hello_event );
+}
 ```
 2 строчки `using` просто для удобства. Вызовы для создания каналов находятся в `namespace vtrc::server::channels`.
 
