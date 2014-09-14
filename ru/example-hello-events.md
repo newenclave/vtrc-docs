@@ -75,6 +75,25 @@ service hello_events {
 
 Далее работа идентична примеру [hello](https://github.com/newenclave/vtrc-docs/blob/master/ru/example-hello.md), однако теперь в вызове главного сервиса `generate_events` создается 2 разных канала и через эти 2 канала делаются 2 разных вызова.
 
+####Канал первый, вызов события.
+
+```cpp
+	using   server::channels::unicast::create_callback_channel;
+      using   server::channels::unicast::create_event_channel;
+      { // do event. send and dont wait response
+          common::rpc_channel *ec =
+                            create_event_channel( cl_->shared_from_this( ) );
+          common::stub_wrapper<stub_type> event( ec );
+          event.call( &stub_type::hello_event );
+      }
+```
+2 строчки `using` просто для удобства. Вызовы для создания каналов находятся в `namespace vtrc::server::channels`.
+
+Далее создается канал событий `create_event_channel`. Этот канал "говорит" другой стороне, что нужно выполнить вызов в любом свободном от ожидания потоке. Вызов возвращает управление сразу и не ждет ответа, другая сторона, ответ и не отправляет.  
+    Однако канал событий можно заставить ждать ответ. 
+    Второй параметр вызова `create_event_channel`, названный `disable_wait
+`, отвечает за ожидание. 
+    По-умолчанию установлен в `true`. При значении `false`, вызовы сделанные через такой канал будут ждать результата с другой стороны.
 ##Client
 
 
