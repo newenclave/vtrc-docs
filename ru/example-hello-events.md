@@ -214,4 +214,28 @@ class hello_event_impl: public howto::hello_events {
 ```
 Тут на консоль уже будет выведет тот самый id, который был показан при старте клиента из функции `main( )`. 
 
+##Пример старта и вывода.
+
+Сервер: 
+```
+[root@virt2real default]# ./hello_events_server 0.0.0.0 12345
+```
+Клиент: 
+```
+% ./hello_events_client 192.168.3.1 12345
+Connecting...
+connect...ready...Ok
+main( ) thread id is: 0x7f89591ac780
+Make call 'generate_events'...
+Event from server; Current thread is: 0x7f8957492700
+Callback from server; Current thread is: 0x7f89591ac780
+'generate_events' OK
+```
+
+Результат на стороне сервера:
+
+```
+[root@virt2real default]# ./hello_events_server 0.0.0.0 12345
+Client string: Hello there! my thread id is 0x7f89591ac780
+```
 
