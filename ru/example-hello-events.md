@@ -73,6 +73,14 @@ service hello_events {
 
 тут создается всего один поток, а первый ноль указывает на то, что нужно создать io_service, но пока не запускать обработку для него.
 
+Доступ к IO пулу у `common::pool_pair` возможен через `get_io_pool( )`. 
+
+```cpp
+        pp.get_io_pool( ).attach( );
+```
+Как и в примере `hello`, запустит обработку системных событий в потоке вызова `main( )`.
+
+
 Далее работа идентична примеру [hello](https://github.com/newenclave/vtrc-docs/blob/master/ru/example-hello.md), однако теперь в вызове главного сервиса `generate_events` создается 2 разных канала и через эти 2 канала делаются 2 разных вызова.
 
 ####Канал первый, вызов события.
@@ -117,6 +125,7 @@ using   server::channels::unicast::create_event_channel;
 ```
 
 Тут создается канал вызовом `create_callback_channel` и вызов делается уже с ожиданием. После вызова выводится строка (`response.hello_from_client( )`), которую написал серверу клиент.
+
 
 ##Client
 
