@@ -102,9 +102,12 @@ using   server::channels::unicast::create_event_channel;
 { // do callback. wait response from client.
     common::rpc_channel *cc =
         create_callback_channel( cl_->shared_from_this( ) );
+
     common::stub_wrapper<stub_type> callback( cc );
     howto::event_res response;
+
     callback.call_response( &stub_type::hello_callback, &response );
+
     std::cout << "Client string: "
         << response.hello_from_client( )
         << "\n"
@@ -112,6 +115,8 @@ using   server::channels::unicast::create_event_channel;
 }
 
 ```
+
+Тут создается канал вызовом `create_callback_channel` и вызов делается уже с ожиданием. После вызова выводится строка (`response.hello_from_client( )`), которую написал серверу клиент.
 
 ##Client
 
