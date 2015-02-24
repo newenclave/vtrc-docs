@@ -651,8 +651,8 @@ class lukki_db_Stub : public lukki_db {
 Два вызова 
 
 ```cpp
-    rpc_channel_c *create_channel( );
-    rpc_channel_c *create_channel( unsigned flags );
+    common::rpc_channel *create_channel( );
+    common::rpc_channel *create_channel( unsigned flags );
 ```
 Вызовы создают новый канал.
     
