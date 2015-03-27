@@ -681,7 +681,7 @@ class lukki_db_Stub : public lukki_db {
 Флаги можно получить из созданного канала и установить новые, если требуется. Вызовы 
 ```cpp
     unsigned rpc_channel::get_flags( ) const;
-    rpc_channel::set_flags( unsigned value );
+    void rpc_channel::set_flags( unsigned value );
 
 ```
 
