@@ -8,7 +8,7 @@
 + Boost (http://boost.org/)
 + Google Protocol Buffers (https://code.google.com/p/protobuf/) далее просто Protobuf
 + Используется реализация sha2 Аарона Д. Гиффорда (http://www.aarongifford.com/). Включена в состав проекта.
-
++ реализация PRG "ChaCha20" D. J. Bernstein. Включена в состав проекта.
 
 ##Основные возможности:
 
